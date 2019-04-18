@@ -7,10 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -24,9 +22,7 @@ public class GameVisualizer extends JPanel {
 
     public ArrayList<Bug> bugs = new ArrayList<>();
 
-    public volatile int m_targetPositionX;
-    public volatile int m_targetPositionY;
-    public volatile boolean targetIsEaten = false;
+    public List<Point> targets;
 
     public volatile double currentWidth;
     public volatile double currentHeight;
@@ -53,7 +49,6 @@ public class GameVisualizer extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                targetIsEaten = false;
                 setTargetPosition(e.getPoint());
             }
         });
@@ -87,13 +82,12 @@ public class GameVisualizer extends JPanel {
         bugs.add(new Bug(300, 50, 0, Color.ORANGE));
         bugs.add(new Bug(300, 300, 0, Color.PINK));
 
-        m_targetPositionX = 150;
-        m_targetPositionY = 50;
+        targets = new ArrayList<>();
+        targets.add(new Point(150, 50));
     }
 
     public void setTargetPosition(Point p) {
-        m_targetPositionX = p.x;
-        m_targetPositionY = p.y;
+        targets.add(new Point(p.x, p.y));
     }
 
     protected void onRedrawEvent() {
@@ -169,7 +163,7 @@ public class GameVisualizer extends JPanel {
     }
 
     public void onModelUpdateEvent() {
-        if (targetIsEaten) {
+        if (targets.size() == 0) {
             return;
         }
 
@@ -179,6 +173,19 @@ public class GameVisualizer extends JPanel {
             double m_bugPositionX = bug.getM_bugPositionX();
             double m_bugPositionY = bug.getM_bugPositionY();
             double m_bugDirection = bug.getM_bugDirection();
+
+            double distance = Double.POSITIVE_INFINITY;
+            Point target = new Point(0,0);
+            for (Point m_target : targets){
+                double new_dist = distance(m_target.x, m_target.y, m_bugPositionX, m_bugPositionY);
+                if (new_dist < distance){
+                    distance = new_dist;
+                    target = m_target;
+                }
+            }
+
+            double m_targetPositionX = target.x;
+            double m_targetPositionY = target.y;
 
             double velocity = maxVelocity;
             double angleToTarget = angleTo(m_bugPositionX, m_bugPositionY, m_targetPositionX, m_targetPositionY);
@@ -190,10 +197,8 @@ public class GameVisualizer extends JPanel {
                 angularVelocity = -maxAngularVelocity;
             }
 
-            double distance = distance(m_targetPositionX, m_targetPositionY,
-                    m_bugPositionX, m_bugPositionY);
             if (distance < 0.7) {
-                targetIsEaten = true;
+                targets.remove(target);
             }
 
             if (Math.abs(angleToTarget - m_bugDirection) < 0.05) {
@@ -243,7 +248,8 @@ public class GameVisualizer extends JPanel {
         for (Bug bug : bugs) {
             Graphics2D g2d = (Graphics2D) g;
             drawRobot(g2d, bug);
-            drawTarget(g2d, m_targetPositionX, m_targetPositionY);
+            for (Point target : targets)
+                drawTarget(g2d, target.x, target.y);
         }
     }
 
