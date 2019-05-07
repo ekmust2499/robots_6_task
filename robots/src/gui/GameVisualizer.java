@@ -22,7 +22,7 @@ public class GameVisualizer extends JPanel {
 
     public ArrayList<Bug> bugs = new ArrayList<>();
 
-    public Targets targets;
+    public Targets targets = new Targets();
 
     public volatile double currentWidth;
     public volatile double currentHeight;
@@ -81,8 +81,7 @@ public class GameVisualizer extends JPanel {
         bugs.add(new Bug(50, 300, 0, Color.CYAN, "CYAN"));
         bugs.add(new Bug(300, 50, 0, Color.ORANGE, "ORANGE"));
         bugs.add(new Bug(300, 300, 0, Color.PINK, "PINK"));
-
-        targets = new Targets();
+        
         targets.addTarget(new Point(150, 50));
     }
 
