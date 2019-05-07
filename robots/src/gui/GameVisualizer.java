@@ -22,7 +22,7 @@ public class GameVisualizer extends JPanel {
 
     public ArrayList<Bug> bugs = new ArrayList<>();
 
-    public List<Point> targets;
+    public Targets targets;
 
     public volatile double currentWidth;
     public volatile double currentHeight;
@@ -77,17 +77,17 @@ public class GameVisualizer extends JPanel {
 
     public void setStartPositions() {
         bugs = new ArrayList<>();
-        bugs.add(new Bug(50, 50, 0, Color.RED));
-        bugs.add(new Bug(50, 300, 0, Color.CYAN));
-        bugs.add(new Bug(300, 50, 0, Color.ORANGE));
-        bugs.add(new Bug(300, 300, 0, Color.PINK));
+        bugs.add(new Bug(50, 50, 0, Color.RED, "RED"));
+        bugs.add(new Bug(50, 300, 0, Color.CYAN, "CYAN"));
+        bugs.add(new Bug(300, 50, 0, Color.ORANGE, "ORANGE"));
+        bugs.add(new Bug(300, 300, 0, Color.PINK, "PINK"));
 
-        targets = new ArrayList<>();
-        targets.add(new Point(150, 50));
+        targets = new Targets();
+        targets.addTarget(new Point(150, 50));
     }
 
     public void setTargetPosition(Point p) {
-        targets.add(new Point(p.x, p.y));
+        targets.addTarget(new Point(p.x, p.y));
     }
 
     protected void onRedrawEvent() {
@@ -159,11 +159,12 @@ public class GameVisualizer extends JPanel {
 
         for (Bug bug : bugsToDelete) {
             bugs.remove(bug);
+            bug.bugDied();
         }
     }
 
     public void onModelUpdateEvent() {
-        if (targets.size() == 0) {
+        if (targets.getTargetsList().size() == 0) {
             return;
         }
 
@@ -175,10 +176,10 @@ public class GameVisualizer extends JPanel {
             double m_bugDirection = bug.getM_bugDirection();
 
             double distance = Double.POSITIVE_INFINITY;
-            Point target = new Point(0,0);
-            for (Point m_target : targets){
+            Point target = null;
+            for (Point m_target : targets.getTargetsList()) {
                 double new_dist = distance(m_target.x, m_target.y, m_bugPositionX, m_bugPositionY);
-                if (new_dist < distance){
+                if (new_dist < distance) {
                     distance = new_dist;
                     target = m_target;
                 }
@@ -198,11 +199,10 @@ public class GameVisualizer extends JPanel {
             }
 
             if (distance < 0.7) {
-                targets.remove(target);
+                targets.removeTarget(target);
             }
 
             if (Math.abs(angleToTarget - m_bugDirection) < 0.05) {
-
                 moveRobot(bug, velocity, angularVelocity, 10);
             } else {
                 if (distance < 15) {
@@ -248,7 +248,7 @@ public class GameVisualizer extends JPanel {
         for (Bug bug : bugs) {
             Graphics2D g2d = (Graphics2D) g;
             drawRobot(g2d, bug);
-            for (Point target : targets)
+            for (Point target : targets.getTargetsList())
                 drawTarget(g2d, target.x, target.y);
         }
     }

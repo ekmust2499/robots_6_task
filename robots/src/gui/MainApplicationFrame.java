@@ -3,8 +3,12 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -38,6 +42,18 @@ public class MainApplicationFrame extends JFrame {
         gameWindow = new GameWindow();
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
+
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            for (Bug bug : gameWindow.getVisualizer().bugs) {
+                ObjectName name = new ObjectName("gui:type=Bug, name=" + bug.getName());
+                mbs.registerMBean(bug, name);
+            }
+            ObjectName name = new ObjectName("gui:type=Targets");
+            mbs.registerMBean(gameWindow.getVisualizer().targets, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
