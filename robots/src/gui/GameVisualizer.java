@@ -176,7 +176,7 @@ public class GameVisualizer extends JPanel {
             double m_bugDirection = bug.getM_bugDirection();
 
             double distance = Double.POSITIVE_INFINITY;
-            Point target = null;
+            Point target = new Point(0, 0);
             for (Point m_target : targets.getTargetsList()) {
                 double new_dist = distance(m_target.x, m_target.y, m_bugPositionX, m_bugPositionY);
                 if (new_dist < distance) {
