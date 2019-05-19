@@ -24,7 +24,7 @@ public class MainApplicationFrame extends JFrame {
     public GameWindow gameWindow;
     // private SaveAndLoadGame saveLoadManager = new SaveAndLoadGame();
 
-    public MainApplicationFrame() {
+    public MainApplicationFrame() throws IOException {
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
         int inset = 50;
@@ -43,6 +43,11 @@ public class MainApplicationFrame extends JFrame {
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
 
+//        JButton button = new JButton("Test button");
+//        ActionListener actionListener = new TestActionListener();
+//        button.addActionListener(actionListener);
+//        gameWindow.add(button);
+
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
             for (Bug bug : gameWindow.getVisualizer().bugs) {
@@ -55,9 +60,22 @@ public class MainApplicationFrame extends JFrame {
             e.printStackTrace();
         }
 
+//        UserAccount user = new UserAccount("genya", "genechka", "genya0305");
+//        //gameWindow.database.addUserInDatabase(user);
+//
+//        String[] user2 = gameWindow.database.checkAndGetUserByPassword(user.getLogin(), user.getPassword());
+//        System.out.println(user2[0]);
+//        System.out.println(user2[1]);
+
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
     }
+//    public class TestActionListener implements ActionListener {
+//        public void actionPerformed(ActionEvent e) {
+//            //Код, который нужно выполнить при нажатии
+//        }
+//    }
 
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
@@ -65,6 +83,7 @@ public class MainApplicationFrame extends JFrame {
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
+
         Logger.debug("Протокол работает");
         return logWindow;
     }
@@ -108,6 +127,7 @@ public class MainApplicationFrame extends JFrame {
 
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
+
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
                 "Управление режимом отображения приложения");
 
@@ -138,12 +158,14 @@ public class MainApplicationFrame extends JFrame {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> {
                 Logger.debug("Новая строка");
+
             });
             testMenu.add(addLogMessageItem);
         }
 
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
+
         return menuBar;
     }
 

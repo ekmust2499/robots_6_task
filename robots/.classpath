@@ -2,5 +2,25 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="lib/api-common-1.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/firebase-admin-6.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/firebase-admin-6.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/firebase-admin-6.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/firebase-server-sdk-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-1.20.0.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-http-1.2.3-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-jackson2-1.28.0.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-json-1.2.3-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-util-1.2.3-alpha.jar"/>
+	<classpathentry kind="lib" path="lib/google-auth-library-appengine-0.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/google-auth-library-credentials-0.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/google-auth-library-oauth2-http-0.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/google-http-client-1.12.0-beta.jar"/>
+	<classpathentry kind="lib" path="lib/google-http-client-jackson-1.29.1.jar"/>
+	<classpathentry kind="lib" path="lib/google-http-client-jackson2-1.11.0-beta.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.9.9.jar"/>
+	<classpathentry kind="lib" path="lib/logback-classic-1.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/logback-core-1.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
