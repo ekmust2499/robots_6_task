@@ -11,26 +11,41 @@ import javax.swing.*;
 public class Main {
     private static RobotsProgram robot;
     private static Registration registration;
-    public static boolean start = true;
-    public static void main(String args[]) {
+    private static Database database = new Database();
+    static boolean start = true;
+    public static void main(String args[]) throws IOException {
+        database.initDatabase();
         MainPanel message = new MainPanel();
         MainPanelToken messageToken = new MainPanelToken();
         while (start) {
             int window = JOptionPane.showOptionDialog(null, message, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с токеном", "Регистрация"}, "Вход");
             switch (window) {
-                case JOptionPane.OK_OPTION:
-                    start = false;
-                    robot = new RobotsProgram();
+                case JOptionPane.OK_OPTION: {
+                    String[] answerAboutPassword = database.checkAndGetUserByPassword(message.getLogin(), message.getPassword());
+                    if (answerAboutPassword[0] != null) {
+                        start = false;
+                        robot = new RobotsProgram();
+                        break;
+                        //проверка на устаревший токен + окно
+                    }
+                }
+
                 case JOptionPane.CANCEL_OPTION:
-                    registration = new Registration();
+                    registration = new Registration(database);
                 case JOptionPane.NO_OPTION:
                     int token = JOptionPane.showOptionDialog(null, messageToken, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с паролем", "Регистрация"}, "Вход");
                     switch (token) {
                         case JOptionPane.OK_OPTION:
-                            start = false;
-                            robot = new RobotsProgram();
+                            String[] answerAboutToken = database.checkAndGetUserByToken(messageToken.getLogin(), messageToken.getToken());
+                            if (answerAboutToken[0] != null) {
+                                start = false;
+                                robot = new RobotsProgram();
+                                break;
+                            }
+                            else{
+                            }
                         case JOptionPane.CANCEL_OPTION:
-                            registration = new Registration();
+                            registration = new Registration(database);
                         case JOptionPane.NO_OPTION:
                             start = true;
                         default:
@@ -126,8 +141,8 @@ public class Main {
                             BufferedReader reader = new BufferedReader(fr);
                             // считаем сначала первую строку
                             token = reader.readLine();
-                        } catch (FileNotFoundException ex) {
-                            ex.printStackTrace();
+                            token = token.substring(2);
+                            System.out.println(token);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }

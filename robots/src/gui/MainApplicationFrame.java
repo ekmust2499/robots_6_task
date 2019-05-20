@@ -43,11 +43,6 @@ public class MainApplicationFrame extends JFrame {
         gameWindow.setSize(400, 400);
         addWindow(gameWindow);
 
-//        JButton button = new JButton("Test button");
-//        ActionListener actionListener = new TestActionListener();
-//        button.addActionListener(actionListener);
-//        gameWindow.add(button);
-
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
             for (Bug bug : gameWindow.getVisualizer().bugs) {
@@ -60,22 +55,10 @@ public class MainApplicationFrame extends JFrame {
             e.printStackTrace();
         }
 
-//        UserAccount user = new UserAccount("genya", "genechka", "genya0305");
-//        //gameWindow.database.addUserInDatabase(user);
-//
-//        String[] user2 = gameWindow.database.checkAndGetUserByPassword(user.getLogin(), user.getPassword());
-//        System.out.println(user2[0]);
-//        System.out.println(user2[1]);
-
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
-//    public class TestActionListener implements ActionListener {
-//        public void actionPerformed(ActionEvent e) {
-//            //Код, который нужно выполнить при нажатии
-//        }
-//    }
 
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());

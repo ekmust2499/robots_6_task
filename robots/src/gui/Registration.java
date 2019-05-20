@@ -6,9 +6,11 @@ import java.awt.*;
 public class Registration {
 
     private RobotsProgram robot;
-    public Registration() {
+    public Registration(Database database) {
         RegistrationPanel message = new RegistrationPanel();
         if (JOptionPane.showOptionDialog(null, message, "Регистрация", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {"Зарегистрировать", "Отмена"}, "Зарегистрировать") == JOptionPane.YES_OPTION) {
+            UserAccount user = new UserAccount(message.getNameUser(), message.getLogin(), message.getPassword());
+            database.addUserInDatabase(user);
             JOptionPane.showMessageDialog(null, "Вы зарегистрированы!");
             Main.start = false;
             robot = new RobotsProgram();

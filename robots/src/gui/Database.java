@@ -73,6 +73,7 @@ class Database {
                         }
                     }
                     System.out.println(usefulData[0]);
+                    System.out.println(usefulData[1]);
                 }
                 else
                 {
@@ -124,6 +125,8 @@ class Database {
                     long time = Long.parseLong(dataSnapshot.child("time_to_live").getValue().toString());
                     Date date = new Date();
                     long now = date.getTime();
+                    System.out.println(time);
+                    System.out.println(now);
                     if (user.getPassword().equals(password)) {
                         //users[0] = user;
                         usefulData[0] = user.getUserName();
@@ -163,7 +166,7 @@ class Database {
         try {
             synchronized(event)
             {
-                event.wait();
+                event.wait(1000);
             }
         }
         catch (InterruptedException e) {
@@ -177,7 +180,7 @@ class Database {
         try {
             try (OutputStream os = new FileOutputStream(file)) {
                 try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(os))) {
-                    dos.writeChars(token);
+                    dos.writeUTF(token);
                     dos.flush();
                 }
             }
@@ -188,73 +191,49 @@ class Database {
     }
 
     void updateToken(String login, String token) {
-        databaseReference.addValueEventListener(new ValueEventListener() {
 
+        DatabaseReference childReference = databaseReference;
+        System.out.println(childReference);
+        Map<String, Object> hopperUpdates = new HashMap<>();
+        Date now = new Date();
+        long seconds = now.getTime();
+        long time = seconds + 1800000;
+        System.out.println("in update");
+        hopperUpdates.put("login", login);
+        hopperUpdates.put("token", token);
+        hopperUpdates.put("time_to_live", String.valueOf(time));
+        childReference.child(login).updateChildren(hopperUpdates, new DatabaseReference.CompletionListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DatabaseReference childReference = databaseReference;
-                System.out.println(childReference);
-                Map<String, Object> hopperUpdates = new HashMap<>();
-                Date now = new Date();
-                long seconds = now.getTime();
-                long time = seconds + 3600;
-                System.out.println("in");
-                hopperUpdates.put("name", login);
-                hopperUpdates.put("token", token);
-                hopperUpdates.put("time_to_live", String.valueOf(time));
-                childReference.child(login).updateChildren(hopperUpdates, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference dataReference) {
-                        writeTokenInFile(token);
-                        System.out.println("update");
-                    }
-                });
-                System.out.println("out");
+            public void onComplete(DatabaseError databaseError, DatabaseReference dataReference) {
+                writeTokenInFile(token);
+                System.out.println("update Token");
             }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-
         });
-        System.out.println("вышли из save");
+
+        System.out.println("вышли из update");
     }
 
     void addUserInDatabase(UserAccount user) {
         System.out.println("зашли в save");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
+        Map<String, Object> hopperUpdates = new HashMap<>();
+        String name = user.getUserName();
+        String login = user.getLogin();
+        String password = user.getPassword();
+        String token = TokenGenerator.nextToken();
+        Date now = new Date();
+        long seconds = now.getTime();
+        long time = seconds + 1800000;
+        System.out.println("in");
+        hopperUpdates.put("name", name);
+        hopperUpdates.put("login", login);
+        hopperUpdates.put("password", password);
+        hopperUpdates.put("token", token);
+        hopperUpdates.put("time_to_live", String.valueOf(time));
+        databaseReference.child(login).setValue(hopperUpdates, new DatabaseReference.CompletionListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DatabaseReference childReference = databaseReference;
-                System.out.println(childReference);
-                Map<String, Object> hopperUpdates = new HashMap<>();
-                String name = user.getUserName();
-                String login = user.getLogin();
-                String password = user.getPassword();
-                String token = TokenGenerator.nextToken();
-                Date now = new Date();
-                long seconds = now.getTime();
-                long time = seconds + 3600;
-                System.out.println("in");
-                hopperUpdates.put("name", name);
-                hopperUpdates.put("login", login);
-                hopperUpdates.put("password", password);
-                hopperUpdates.put("token", token);
-                hopperUpdates.put("time_to_live", String.valueOf(time));
-                childReference.child(login).setValue(hopperUpdates, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference dataReference) {
-                        writeTokenInFile(token);
-                    }
-                });
-                System.out.println("out");
+            public void onComplete(DatabaseError databaseError, DatabaseReference dataReference) {
+                writeTokenInFile(token);
             }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-
         });
         System.out.println("вышли из save");
     }
