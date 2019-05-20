@@ -161,7 +161,6 @@ public class Main {
                             // считаем сначала первую строку
                             token = reader.readLine();
                             token = token.substring(2);
-                            System.out.println(token);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
