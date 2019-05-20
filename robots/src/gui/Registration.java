@@ -17,7 +17,7 @@ public class Registration {
                 robot = new RobotsProgram();
             }
             else {
-                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
             }
         }
     }

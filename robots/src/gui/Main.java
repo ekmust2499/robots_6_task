@@ -21,24 +21,29 @@ public class Main {
             int window = JOptionPane.showOptionDialog(null, message, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с токеном", "Регистрация"}, "Вход");
             switch (window) {
                 case JOptionPane.OK_OPTION: {
-                    String[] answerAboutPassword = database.checkAndGetUserByPassword(message.getLogin(), message.getPassword());
-                    if (answerAboutPassword[0] != null) {
-                        if (answerAboutPassword[1] != null) {
-                            try {
-                                File file = new File("token.txt");
-                                //создаем объект FileReader для объекта File
-                                FileWriter fileWriter = new FileWriter(file);
-                                fileWriter.write(answerAboutPassword[1]);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
+                    if (message.getLogin().length()!=0 && message.getPassword().length()!=0) {
+                        String[] answerAboutPassword = database.checkAndGetUserByPassword(message.getLogin(), message.getPassword());
+                        if (answerAboutPassword[0] != null) {
+                            if (answerAboutPassword[1] != null) {
+                                try {
+                                    File file = new File("token.txt");
+                                    //создаем объект FileReader для объекта File
+                                    FileWriter fileWriter = new FileWriter(file);
+                                    fileWriter.write(answerAboutPassword[1]);
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                }
                             }
+                            start = false;
+                            robot = new RobotsProgram();
+                            break;
+                        } else {
+                            JOptionPane.showMessageDialog(null, answerAboutPassword[1], "Ошибка", JOptionPane.OK_OPTION);
+                            continue;
                         }
-                        start = false;
-                        robot = new RobotsProgram();
-                        break;
                     }
-                    else{
-                        JOptionPane.showMessageDialog(null, answerAboutPassword[1], "Ошибка", JOptionPane.OK_OPTION);
+                    else {
+                        JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Некорректный ввод", JOptionPane.OK_OPTION);
                         continue;
                     }
                 }
@@ -61,7 +66,7 @@ public class Main {
                                 }
                             }
                             else {
-                                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+                                JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Некорректный ввод", JOptionPane.OK_OPTION);
                                 continue;
                             }
                         case JOptionPane.CANCEL_OPTION:
