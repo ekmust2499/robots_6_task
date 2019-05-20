@@ -8,7 +8,7 @@ import javax.swing.UIManager;
 
 
 public class RobotsProgram {
-    public static void main(String[] args) {
+    public RobotsProgram() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 //        UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
