@@ -9,14 +9,16 @@ public class Registration {
     public Registration(Database database) {
         RegistrationPanel message = new RegistrationPanel();
         if (JOptionPane.showOptionDialog(null, message, "Регистрация", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {"Зарегистрировать", "Отмена"}, "Зарегистрировать") == JOptionPane.YES_OPTION) {
-            UserAccount user = new UserAccount(message.getNameUser(), message.getLogin(), message.getPassword());
-            database.addUserInDatabase(user);
-            JOptionPane.showMessageDialog(null, "Вы зарегистрированы!");
-            Main.start = false;
-            robot = new RobotsProgram();
-        }
-        else {
-
+            if (message.getLogin().length() != 0 && message.getNameUser().length() != 0 && message.getPassword().length() != 0) {
+                UserAccount user = new UserAccount(message.getNameUser(), message.getLogin(), message.getPassword());
+                database.addUserInDatabase(user);
+                JOptionPane.showMessageDialog(null, "Вы зарегистрированы!");
+                Main.start = false;
+                robot = new RobotsProgram();
+            }
+            else {
+                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+            }
         }
     }
 

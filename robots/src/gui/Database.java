@@ -137,6 +137,9 @@ class Database {
                             usefulData[1] = token;
                             //users[0] = null;
                         }
+                        else {
+                            usefulData[1] = null;
+                        }
                     }
 
                     else {

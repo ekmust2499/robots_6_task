@@ -23,35 +23,54 @@ public class Main {
                 case JOptionPane.OK_OPTION: {
                     String[] answerAboutPassword = database.checkAndGetUserByPassword(message.getLogin(), message.getPassword());
                     if (answerAboutPassword[0] != null) {
+                        if (answerAboutPassword[1] != null) {
+                            try {
+                                File file = new File("token.txt");
+                                //создаем объект FileReader для объекта File
+                                FileWriter fileWriter = new FileWriter(file);
+                                fileWriter.write(answerAboutPassword[1]);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                         start = false;
                         robot = new RobotsProgram();
                         break;
-                        //проверка на устаревший токен + окно
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, answerAboutPassword[1], "Ошибка", JOptionPane.OK_OPTION);
+                        continue;
                     }
                 }
-
                 case JOptionPane.CANCEL_OPTION:
                     registration = new Registration(database);
+                    continue;
                 case JOptionPane.NO_OPTION:
                     int token = JOptionPane.showOptionDialog(null, messageToken, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с паролем", "Регистрация"}, "Вход");
                     switch (token) {
                         case JOptionPane.OK_OPTION:
-                            String[] answerAboutToken = database.checkAndGetUserByToken(messageToken.getLogin(), messageToken.getToken());
-                            if (answerAboutToken[0] != null) {
-                                start = false;
-                                robot = new RobotsProgram();
-                                break;
+                            if (messageToken.getLogin().length() != 0 && messageToken.getToken().length() != 0) {
+                                String[] answerAboutToken = database.checkAndGetUserByToken(messageToken.getLogin(), messageToken.getToken());
+                                if (answerAboutToken[0] != null) {
+                                    start = false;
+                                    robot = new RobotsProgram();
+                                    break;
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Неверный токен!\nВозможно ваш токен устарел, поэтому зайдите с паролем, мы его вам обновим", "Ошибка токена", JOptionPane.OK_OPTION);
+                                    continue;
+                                }
                             }
-                            else{
+                            else {
+                                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+                                continue;
                             }
                         case JOptionPane.CANCEL_OPTION:
                             registration = new Registration(database);
+                            continue;
                         case JOptionPane.NO_OPTION:
                             start = true;
-                        default:
-                            start = false;
                     }
-                default:
+                case JOptionPane.DEFAULT_OPTION:
                     start = false;
             }
         }
