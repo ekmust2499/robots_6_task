@@ -52,14 +52,14 @@ class Database {
                     long now = date.getTime();
                     if (now > time) //если время жизни токена истекло
                     {
-                        usefulData[0] = null;
+                        usefulData[0] = user.getUserName();
                         usefulData[1] = "Токен устарел";
                     }
                     else {
                         if (tokenFromDatabase.equals(token)) {
                             usefulData[0] = user.getUserName();
                         } else {
-                            usefulData[0] = null;
+                            usefulData[0] = user.getUserName();
                             usefulData[1] = "Неверный токен";
                         }
                     }

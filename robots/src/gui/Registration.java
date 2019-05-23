@@ -12,7 +12,7 @@ public class Registration {
             if (message.getLogin().length() != 0 && message.getNameUser().length() != 0 && message.getPassword().length() != 0) {
                 addUser(message, database);
             } else {
-                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
             }
         }
     }

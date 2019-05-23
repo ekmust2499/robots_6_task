@@ -43,21 +43,15 @@ public class MessageToken extends JPanel {
         btnFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fileChooser.setDialogTitle("Выберите файл");
-                // Определение режима - только файл
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int result = fileChooser.showOpenDialog(MessageToken.this);
-                // Если файл выбран, покажем его в сообщении
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     try {
-                        //создаем объект FileReader для объекта File
                         FileReader fr = new FileReader(file);
-                        //создаем BufferedReader с существующего FileReader для построчного считывания
                         BufferedReader reader = new BufferedReader(fr);
-                        // считаем сначала первую строку
                         token = reader.readLine();
                         token = token.substring(2);
-                        System.out.println(token);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

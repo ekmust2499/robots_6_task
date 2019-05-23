@@ -30,15 +30,6 @@ public class Main {
         return false;
     }
 
-    public static boolean CheckedUserWithToken(String token) {
-        if (token != null) {
-            start = false;
-            robot = new RobotsProgram();
-            return true;
-        }
-        return false;
-    }
-
     public static void main(String args[]) throws IOException {
         database.initDatabase();
         messagePassword = new MessagePassword();
@@ -47,11 +38,17 @@ public class Main {
             int window = JOptionPane.showOptionDialog(null, messagePassword, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с токеном", "Регистрация"}, "Вход");
             switch (window) {
                 case 0: {
-                    String[] answerAboutPassword = database.checkAndGetUserByPassword(messagePassword.getLogin(), messagePassword.getPassword());
-                    if (CheckedUserWithPassword(answerAboutPassword))
-                        break;
-                    else{
-                        JOptionPane.showMessageDialog(null, answerAboutPassword[1], "Ошибка", JOptionPane.OK_OPTION);
+                    if (messagePassword.getPassword().length() != 0 && messagePassword.getLogin().length() != 0) {
+                        String[] answerAboutPassword = database.checkAndGetUserByPassword(messagePassword.getLogin(), messagePassword.getPassword());
+                        if (CheckedUserWithPassword(answerAboutPassword))
+                            break;
+                        else {
+                            JOptionPane.showMessageDialog(null, answerAboutPassword[1], "Ошибка", JOptionPane.OK_OPTION);
+                            continue;
+                        }
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
                         continue;
                     }
                 }
@@ -62,17 +59,32 @@ public class Main {
                     int token = JOptionPane.showOptionDialog(null, messageToken, "Авторизация", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Вход", "Вход с паролем", "Регистрация"}, "Вход");
                     switch (token) {
                         case 0:
-                            if (messageToken.getLogin().length() != 0 && messageToken.getToken().length() != 0) {
+                            if (messageToken.getToken() != null && messageToken.getLogin().length() != 0 ) {
                                 String[] answerAboutToken = database.checkAndGetUserByToken(messageToken.getLogin(), messageToken.getToken());
-                                if (CheckedUserWithToken(answerAboutToken[1]))
-                                    break;
+                                if (answerAboutToken[0] != null) {
+                                    if (answerAboutToken[1] != "Токен устарел") {
+                                        if (answerAboutToken[1] != "Неверный токен") {
+                                            start = false;
+                                            robot = new RobotsProgram();
+                                            break;
+                                        }
+                                        else {
+                                            JOptionPane.showMessageDialog(null, "Неверный токен!", "Ошибка токена", JOptionPane.OK_OPTION);
+                                            continue;
+                                        }
+                                    }
+                                    else {
+                                        JOptionPane.showMessageDialog(null, "Неверный токен!\nВаш токен устарел, поэтому зайдите с паролем, мы его вам обновим", "Ошибка токена", JOptionPane.OK_OPTION);
+                                        continue;
+                                    }
+                                }
                                 else {
-                                    JOptionPane.showMessageDialog(null, "Неверный токен!\nВозможно ваш токен устарел, поэтому зайдите с паролем, мы его вам обновим", "Ошибка токена", JOptionPane.OK_OPTION);
+                                    JOptionPane.showMessageDialog(null, "Неверный логин!", "Ошибка логина", JOptionPane.OK_OPTION);
                                     continue;
                                 }
                             }
                             else {
-                                JOptionPane.showConfirmDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
+                                JOptionPane.showMessageDialog(null, "Надо заполнить все поля", "Корректный ввод", JOptionPane.OK_OPTION);
                                 continue;
                             }
                         case 2:
